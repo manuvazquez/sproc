@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Functionality to post-process already parsed data">
+
+<title>sproc - postprocess</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="sproc - postprocess">
+<meta property="og:description" content="Functionality to post-process already parsed data">
+<meta property="og:site-name" content="sproc">
+<meta name="twitter:title" content="sproc - postprocess">
+<meta name="twitter:description" content="Functionality to post-process already parsed data">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">sproc</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">postprocess</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">sproc</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link">core</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./structure.html" class="sidebar-item-text sidebar-link">structure</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./xml.html" class="sidebar-item-text sidebar-link">xml</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./postprocess.html" class="sidebar-item-text sidebar-link active">postprocess</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bundle.html" class="sidebar-item-text sidebar-link">bundle</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hierarchical.html" class="sidebar-item-text sidebar-link">hier</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./io.html" class="sidebar-item-text sidebar-link">io</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./parse.html" class="sidebar-item-text sidebar-link">parse</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./assemble.html" class="sidebar-item-text sidebar-link">assemble</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extend.html" class="sidebar-item-text sidebar-link">extend</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./download.html" class="sidebar-item-text sidebar-link">download</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sample-data" id="toc-sample-data" class="nav-link active" data-scroll-target="#sample-data">Sample data</a></li>
+  <li><a href="#columns-types" id="toc-columns-types" class="nav-link" data-scroll-target="#columns-types">Columns’ types</a>
+  <ul class="collapse">
+  <li><a href="#typecast_columns" id="toc-typecast_columns" class="nav-link" data-scroll-target="#typecast_columns">typecast_columns</a></li>
+  </ul></li>
+  <li><a href="#most-recent-update" id="toc-most-recent-update" class="nav-link" data-scroll-target="#most-recent-update">Most recent update</a>
+  <ul class="collapse">
+  <li><a href="#keep_updates_only" id="toc-keep_updates_only" class="nav-link" data-scroll-target="#keep_updates_only">keep_updates_only</a></li>
+  </ul></li>
+  <li><a href="#deleted-series" id="toc-deleted-series" class="nav-link" data-scroll-target="#deleted-series">Deleted series</a>
+  <ul class="collapse">
+  <li><a href="#deduplicate_deleted_series" id="toc-deduplicate_deleted_series" class="nav-link" data-scroll-target="#deduplicate_deleted_series">deduplicate_deleted_series</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/manuvazquez/sproc/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">postprocess</h1>
+</div>
+
+<div>
+  <div class="description">
+    Functionality to post-process already parsed data
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>In order to avoid circular dependencies in the resulting <em>Python</em> modules, and since this is only for testing</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sproc.xml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="sample-data" class="level2">
+<h2 class="anchored" data-anchor-id="sample-data">Sample data</h2>
+<p>Directory where the data (<em>XML</em> files) are stored</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>directory <span class="op">=</span> pathlib.Path.cwd().parent <span class="op">/</span> <span class="st">'samples'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> directory.exists()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>directory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples')</code></pre>
+</div>
+</div>
+<p>A (sample) file in that directory</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>xml_file <span class="op">=</span> directory <span class="op">/</span> <span class="st">'PlataformasAgregadasSinMenores_20220104_030016_1.atom'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> xml_file.exists()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>xml_file</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples/PlataformasAgregadasSinMenores_20220104_030016_1.atom')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sproc.xml.to_df(xml_file)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - LegalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03T01:11:41.826+01:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8128_3/2021; Órgano de Contrata...</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>2022-01-03T01:00:11.194+01:00</td>
+      <td>8128_3/2021</td>
+      <td>PUB</td>
+      <td>NaN</td>
+      <td>Pleno del Ayuntamiento</td>
+      <td>AYUNTAMIENTO DE MONREAL</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1000_0005-CP01-2021-000063; Órg...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>2022-01-03T01:00:10.399+01:00</td>
+      <td>1000_0005-CP01-2021-000063</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>El Director General de Comunicación y Relacion...</td>
+      <td>Departamento de Presidencia, Igualdad, Función...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1379/2020 4738; Órgano de Contr...</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>2022-01-03T00:11:40.740+01:00</td>
+      <td>1379/2020 4738</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Canet de Mar</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>...</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 2021-44; Órgano de Contratación...</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>2022-01-03T00:11:40.696+01:00</td>
+      <td>2021-44</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Valls</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>...</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Enllac plec clausules tecniques.doc</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1005_391-2021; Órgano de Contra...</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>2021-12-31T01:00:14.946+01:00</td>
+      <td>1005_391-2021</td>
+      <td>PUB</td>
+      <td>NaN</td>
+      <td>Dirección General de Cultura-Institución Prínc...</td>
+      <td>Departamento de Cultura, Deporte y Juventud</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>113</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8165_3/2021; Órgano de Contrata...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>2021-12-31T01:00:14.393+01:00</td>
+      <td>8165_3/2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Mancomunidad de Servicios Sociales de Base de ...</td>
+      <td>MANCOMUNIDAD DE SERVICIOS DE HUARTE Y DE ESTER...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_3/2021; Órgano de Contrata...</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>2021-12-31T01:00:13.594+01:00</td>
+      <td>8113_3/2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Subdirector de Gestión y Recursos</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2022-01-01</td>
+      <td>2022-12-31</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_01 2021; Órgano de Contrat...</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>2021-12-31T01:00:12.604+01:00</td>
+      <td>8113_01 2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Agencia Navarra de Autonomía y Desarrollo de l...</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 0001264/2021; Órgano de contrat...</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>2021-12-31T00:14:15.739+01:00</td>
+      <td>0001264/2021</td>
+      <td>RES</td>
+      <td>NaN</td>
+      <td>Agencia Pública Empresarial Sanitaria Bajo Gua...</td>
+      <td>Junta de Andalucía</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>117 rows × 38 columns</p>
+</div>
+</div>
+</div>
+<p>There are some <em>multivalued</em> columns</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sproc.structure.multivalued_columns(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>['ContractFolderStatus - ProcurementProject - RequiredCommodityClassification - ItemClassificationCode',
+ 'ContractFolderStatus - TenderResult - ResultCode',
+ 'ContractFolderStatus - TenderResult - ReceivedTenderQuantity',
+ 'ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID',
+ 'ContractFolderStatus - TenderResult - WinningParty - PartyName - Name',
+ 'ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount',
+ 'ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode',
+ 'ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName',
+ 'ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate',
+ 'ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID']</code></pre>
+</div>
+</div>
+</section>
+<section id="columns-types" class="level2">
+<h2 class="anchored" data-anchor-id="columns-types">Columns’ types</h2>
+<p>A regular expression matching any column whose final component is <code>PostalZone</code></p>
+<p>For instance</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>re_postal_zone.match(<span class="st">'foo - PostalZone'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;re.Match object; span=(0, 16), match='foo - PostalZone'&gt;</code></pre>
+</div>
+</div>
+<p>but</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>re_postal_zone.match(<span class="st">'Address - Number'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Two positives</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> re_postal_zone.match(sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'ProcurementProject'</span>, <span class="st">'RealizedLocation'</span>, <span class="st">'Address'</span>, <span class="st">'PostalZone'</span>]))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> re_postal_zone.match(sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'LocatedContractingParty'</span>, <span class="st">'Party'</span>, <span class="st">'PostalAddress'</span>, <span class="st">'PostalZone'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A negative</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> re_postal_zone.match(sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'Wap'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The list below specifies fields that are to be interpreted as <code>str</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>str_columns[:<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[]</code></pre>
+</div>
+</div>
+<p>For easier processing, the <code>list</code>s are turned into <code>str</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>assembled_str_columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[]</code></pre>
+</div>
+</div>
+<p>These columns, if present,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>deadline_date_col <span class="op">=</span> sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'TenderingProcess'</span>,<span class="st">'TenderSubmissionDeadlinePeriod'</span>,<span class="st">'EndDate'</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>deadline_time_col <span class="op">=</span> sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'TenderingProcess'</span>,<span class="st">'TenderSubmissionDeadlinePeriod'</span>,<span class="st">'EndTime'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>are parsed <em>jointly</em> into a new column</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>deadline_datetime_col <span class="op">=</span> sproc.structure.assemble_name([<span class="st">'ContractFolderStatus'</span>, <span class="st">'TenderingProcess'</span>, <span class="st">'TenderSubmissionDeadlinePeriod'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A function to tidy up some things in the <code>pd.DataFrame</code>s returned by <a href="https://manuvazquez.github.io/sproc/xml.html#to_df"><code>sproc.xml.to_df</code></a></p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/postprocess.py#L27" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="typecast_columns" class="level3">
+<h3 class="anchored" data-anchor-id="typecast_columns">typecast_columns</h3>
+<blockquote class="blockquote">
+<pre><code> typecast_columns (input_df:pandas.core.frame.DataFrame)</code></pre>
+</blockquote>
+<p>Tidy up the <code>pd.DataFrame</code> returned by <a href="https://manuvazquez.github.io/sproc/xml.html#to_df"><code>to_df</code></a>.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>input_df: pd.DataFrame</p>
+<p>Input DataFrame as ready by <a href="https://manuvazquez.github.io/sproc/xml.html#to_df"><code>to_df</code></a>.</p></li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><p>out: pd.DataFrame</p>
+<p>Post-processed DataFrame.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>post_df <span class="op">=</span> typecast_columns(df)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>post_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03 00:11:41.826000+00:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2021-12-17 14:00:00+00:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8128_3/2021; Órgano de Contrata...</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>2022-01-03 00:00:11.194000+00:00</td>
+      <td>8128_3/2021</td>
+      <td>PUB</td>
+      <td>&lt;NA&gt;</td>
+      <td>Pleno del Ayuntamiento</td>
+      <td>AYUNTAMIENTO DE MONREAL</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-22 23:30:00+00:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1000_0005-CP01-2021-000063; Órg...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>2022-01-03 00:00:10.399000+00:00</td>
+      <td>1000_0005-CP01-2021-000063</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>El Director General de Comunicación y Relacion...</td>
+      <td>Departamento de Presidencia, Igualdad, Función...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1379/2020 4738; Órgano de Contr...</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>2022-01-02 23:11:40.740000+00:00</td>
+      <td>1379/2020 4738</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Canet de Mar</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-02 23:59:00+00:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 2021-44; Órgano de Contratación...</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>2022-01-02 23:11:40.696000+00:00</td>
+      <td>2021-44</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Valls</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>...</td>
+      <td>Enllac plec clausules tecniques.doc</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-02 23:59:00+00:00</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 39 columns</p>
+</div>
+</div>
+</div>
+<p>After post-processing some <code>object</code>s have been parsed as dates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>post_df.dtypes[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id                                                      string
+summary                                                 string
+title                                                   string
+updated                                    datetime64[ns, UTC]
+ContractFolderStatus - ContractFolderID                 string
+dtype: object</code></pre>
+</div>
+</div>
+<p><em>Multivalued</em> columns are still <em>multivalued</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> sproc.structure.multivalued_columns(post_df) <span class="op">==</span> sproc.structure.multivalued_columns(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="most-recent-update" class="level2">
+<h2 class="anchored" data-anchor-id="most-recent-update">Most recent update</h2>
+<p><em>updated</em>, <strong>after post-processing</strong> is apt for ordering</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>post_df[<span class="st">'updated'</span>].dtype</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>datetime64[ns, UTC]</code></pre>
+</div>
+</div>
+<p>We order the entries by <em>updated</em> date (ascending order) and then group by <em>id</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="op">=</span> post_df.sort_values(<span class="st">'updated'</span>).groupby(<span class="st">'id'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We are interested in groups with more than one element</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>not_one_element_group <span class="op">=</span> (grouped.size() <span class="op">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>not_one_element_group</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+                                                     ...  
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+https://contrataciondelestado.es/sindicacion/P...    False
+Length: 115, dtype: bool</code></pre>
+</div>
+</div>
+<p>Number of tenders with updates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>not_one_element_group.<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>actual_groups <span class="op">=</span> not_one_element_group.index[not_one_element_group]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>actual_groups</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Index(['https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8904280', 'https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8994209'], dtype='string', name='id')</code></pre>
+</div>
+</div>
+<p>There is a group with this number of elements</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>grouped.size().<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>2</code></pre>
+</div>
+</div>
+<p>For getting groups with <em>exactly</em> a certain number of elements (here <span class="math inline">\(2\)</span> again)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>size_2_groups <span class="op">=</span> (grouped.size() <span class="op">==</span> <span class="dv">2</span>).loc[<span class="kw">lambda</span> x: x].index</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>size_2_groups</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Index(['https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8904280', 'https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8994209'], dtype='string', name='id')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>first_group <span class="op">=</span> grouped.get_group(actual_groups[<span class="dv">0</span>])</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>first_group</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>32</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 3069_1/2021; Órgano de Contrata...</td>
+      <td>Construcción de depósito regulador de 100m3 en...</td>
+      <td>2022-01-01 00:00:16.761000+00:00</td>
+      <td>3069_1/2021</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>CONCEJO DE GALBARRA</td>
+      <td>Concejo de Galbarra</td>
+      <td>Construcción de depósito regulador de 100m3 en...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 3069_1/2021; Órgano de Contrata...</td>
+      <td>Construcción de depósito regulador de 100m3 en...</td>
+      <td>2022-01-01 07:30:09.698000+00:00</td>
+      <td>3069_1/2021</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>CONCEJO DE GALBARRA</td>
+      <td>Concejo de Galbarra</td>
+      <td>Construcción de depósito regulador de 100m3 en...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 39 columns</p>
+</div>
+</div>
+</div>
+<p><code>True</code> if columns are different across elements</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>columns_are_different <span class="op">=</span> first_group.iloc[<span class="dv">0</span>] <span class="op">!=</span> first_group.iloc[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>columns_are_different</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id                                                                                                                           False
+summary                                                                                                                      False
+title                                                                                                                        False
+updated                                                                                                                       True
+ContractFolderStatus - ContractFolderID                                                                                      False
+ContractFolderStatus - ContractFolderStatusCode                                                                              False
+ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID                                                            True
+ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name                                                    False
+ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name                                       False
+ContractFolderStatus - ProcurementProject - Name                                                                             False
+ContractFolderStatus - ProcurementProject - TypeCode                                                                         False
+ContractFolderStatus - ProcurementProject - BudgetAmount - EstimatedOverallContractAmount                                    False
+ContractFolderStatus - ProcurementProject - BudgetAmount - TaxExclusiveAmount                                                False
+ContractFolderStatus - ProcurementProject - RequiredCommodityClassification - ItemClassificationCode                         False
+ContractFolderStatus - ProcurementProject - RealizedLocation - CountrySubentityCode                                          False
+ContractFolderStatus - ProcurementProject - PlannedPeriod - DurationMeasure                                                  False
+ContractFolderStatus - TenderResult - ResultCode                                                                              True
+ContractFolderStatus - TenderResult - ReceivedTenderQuantity                                                                  True
+ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID                                                 True
+ContractFolderStatus - TenderResult - WinningParty - PartyName - Name                                                         True
+ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount                        True
+ContractFolderStatus - TenderingProcess - ProcedureCode                                                                      False
+ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate                                            True
+ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime                                            True
+ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode                                                                      False
+ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName                                  False
+ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate     True
+ContractFolderStatus - LegalDocumentReference - ID                                                                            True
+ContractFolderStatus - LegalDocumentReference - Attachment - ExternalReference - URI                                          True
+ContractFolderStatus - TechnicalDocumentReference - ID                                                                        True
+ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI                                      True
+ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate                                                         True
+ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate                                                           True
+ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID                                             True
+ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name                   True
+ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate                                       True
+ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime                                       True
+ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID                                        True
+ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod                                                      True
+dtype: bool</code></pre>
+</div>
+</div>
+<p>The values in those columns are (besides <em>updated</em>) all <code>nan</code>s</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>first_group[first_group.columns[columns_are_different]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>updated</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - TenderResult - ResultCode</th>
+      <th>ContractFolderStatus - TenderResult - ReceivedTenderQuantity</th>
+      <th>ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - TenderResult - WinningParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>32</th>
+      <td>2022-01-01 00:00:16.761000+00:00</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>[2021-12-16, 2021-12-16, 2021-12-16, 2021-12-1...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2022-01-01 07:30:09.698000+00:00</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>[2021-12-16, 2021-12-16, 2021-12-16, 2021-12-1...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 22 columns</p>
+</div>
+</div>
+</div>
+<p>Only the last element of each group (the most recent entry) is kept</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>only_last_update_df <span class="op">=</span> grouped.last()</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>only_last_update_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - TypeCode</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>https://contrataciondelestado.es/sindicacion/P...</th>
+      <td>Id licitación: 6011900114;Órgano de Contrataci...</td>
+      <td>Servicio de migración de los productos BMC ins...</td>
+      <td>2021-12-31 10:56:15.855000+00:00</td>
+      <td>6011900114</td>
+      <td>RES</td>
+      <td>http://www.madrid.org/cs/Satellite?cid=1204201...</td>
+      <td>Empresa Pública de Metro de Madrid, S.A.</td>
+      <td>Consejería de Transportes e Infraestructuras</td>
+      <td>Servicio de migración de los productos BMC ins...</td>
+      <td>2.0</td>
+      <td>...</td>
+      <td>1354764548025.pdf</td>
+      <td>http://www.madrid.org/contratos-publicos/13547...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>None</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>https://contrataciondelestado.es/sindicacion/P...</th>
+      <td>Id licitación: 11/2019; Órgano de Contratació...</td>
+      <td>Concurso de proyectos para la rehabilitación u...</td>
+      <td>2021-12-31 10:41:20.201000+00:00</td>
+      <td>11/2019</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>Alcaldia</td>
+      <td>Ayuntamiento de Leioa</td>
+      <td>Concurso de proyectos para la rehabilitación u...</td>
+      <td>2.0</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>Ayuntamiento de Leioa</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>None</td>
+      <td>2020-01-23 17:00:00+00:00</td>
+    </tr>
+    <tr>
+      <th>https://contrataciondelestado.es/sindicacion/P...</th>
+      <td>Id licitación: 6012000208;Órgano de Contrataci...</td>
+      <td>Suministro de equipos de manutención (carretil...</td>
+      <td>2021-12-31 11:11:15.851000+00:00</td>
+      <td>6012000208</td>
+      <td>RES</td>
+      <td>http://www.madrid.org/cs/Satellite?cid=1204201...</td>
+      <td>Empresa Pública de Metro de Madrid, S.A.</td>
+      <td>Consejería de Transportes e Infraestructuras</td>
+      <td>Suministro de equipos de manutención (carretil...</td>
+      <td>1.0</td>
+      <td>...</td>
+      <td>1354836373815.pdf</td>
+      <td>http://www.madrid.org/contratos-publicos/13548...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>None</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>https://contrataciondelestado.es/sindicacion/P...</th>
+      <td>Id licitación: 6012100119;Órgano de Contrataci...</td>
+      <td>Servicio de soporte al mantenimiento de instal...</td>
+      <td>2021-12-31 10:11:16.027000+00:00</td>
+      <td>6012100119</td>
+      <td>RES</td>
+      <td>http://www.madrid.org/cs/Satellite?cid=1204201...</td>
+      <td>Empresa Pública de Metro de Madrid, S.A.</td>
+      <td>Consejería de Transportes e Infraestructuras</td>
+      <td>Servicio de soporte al mantenimiento de instal...</td>
+      <td>2.0</td>
+      <td>...</td>
+      <td>1354874714036.pdf</td>
+      <td>http://www.madrid.org/contratos-publicos/13548...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>None</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>https://contrataciondelestado.es/sindicacion/P...</th>
+      <td>Id Licitación: PcPG/2021/801758, Órgano de Con...</td>
+      <td>Servicio para la caracterización hidromorfolóx...</td>
+      <td>2022-01-02 22:11:15.096000+00:00</td>
+      <td>PcPG/2021/801758</td>
+      <td>RES</td>
+      <td>https://www.contratosdegalicia.gal//consultaOr...</td>
+      <td>Ente Público Empresarial Augas de Galicia</td>
+      <td>&lt;NA&gt;</td>
+      <td>Servicio para la caracterización hidromorfolóx...</td>
+      <td>2.0</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>A12024974</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>None</td>
+      <td>2021-06-03 14:00:00+00:00</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 38 columns</p>
+</div>
+</div>
+</div>
+<p>A function which keeps, for every procurement entry, only the last update.</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/postprocess.py#L121" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="keep_updates_only" class="level3">
+<h3 class="anchored" data-anchor-id="keep_updates_only">keep_updates_only</h3>
+<blockquote class="blockquote">
+<pre><code> keep_updates_only (df:pandas.core.frame.DataFrame)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(post_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>117</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>only_updated_df <span class="op">=</span> keep_updates_only(post_df)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>only_updated_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>116</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 0001264/2021; Órgano de contrat...</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>2021-12-30 23:14:15.739000+00:00</td>
+      <td>0001264/2021</td>
+      <td>RES</td>
+      <td>&lt;NA&gt;</td>
+      <td>Agencia Pública Empresarial Sanitaria Bajo Gua...</td>
+      <td>Junta de Andalucía</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2021-11-11 15:00:00+00:00</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_01 2021; Órgano de Contrat...</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>2021-12-31 00:00:12.604000+00:00</td>
+      <td>8113_01 2021</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>Agencia Navarra de Autonomía y Desarrollo de l...</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_3/2021; Órgano de Contrata...</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>2021-12-31 00:00:13.594000+00:00</td>
+      <td>8113_3/2021</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>Subdirector de Gestión y Recursos</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>2022-01-01</td>
+      <td>2022-12-31</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>113</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8165_3/2021; Órgano de Contrata...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>2021-12-31 00:00:14.393000+00:00</td>
+      <td>8165_3/2021</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>Mancomunidad de Servicios Sociales de Base de ...</td>
+      <td>MANCOMUNIDAD DE SERVICIOS DE HUARTE Y DE ESTER...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1005_391-2021; Órgano de Contra...</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>2021-12-31 00:00:14.946000+00:00</td>
+      <td>1005_391-2021</td>
+      <td>PUB</td>
+      <td>&lt;NA&gt;</td>
+      <td>Dirección General de Cultura-Institución Prínc...</td>
+      <td>Departamento de Cultura, Deporte y Juventud</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-14 23:59:00+00:00</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 39 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(only_updated_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>115</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="deleted-series" class="level2">
+<h2 class="anchored" data-anchor-id="deleted-series">Deleted series</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sproc.bundle</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>zip_file <span class="op">=</span> directory <span class="op">/</span> <span class="st">'yearly'</span> <span class="op">/</span> <span class="st">'PlataformasAgregadasSinMenores_2018.zip'</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> zip_file.exists()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>zip_file</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples/yearly/PlataformasAgregadasSinMenores_2018.zip')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>deleted_series <span class="op">=</span> sproc.bundle.read_deleted_zip(zip_file)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>deleted_series.head(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>zip                                      file name                                              id                                                                                 
+PlataformasAgregadasSinMenores_2018.zip  PlataformasAgregadasSinMenores_20180217_180137_1.atom  https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1985903   2018-01-04 13:11:18.021000+00:00
+                                                                                                https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1969197   2018-01-04 13:11:17.921000+00:00
+Name: deleted_on, dtype: datetime64[ns, UTC]</code></pre>
+</div>
+</div>
+<p>No duplicates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>deleted_series.index.get_level_values(<span class="dv">1</span>).duplicated().<span class="bu">any</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p>We add an <em>artificial</em> one</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> pd.Timestamp(year<span class="op">=</span><span class="dv">2017</span>, month<span class="op">=</span><span class="dv">1</span>, day<span class="op">=</span><span class="dv">3</span>, tz<span class="op">=</span>deleted_series[<span class="op">-</span><span class="dv">1</span>].tz)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>deleted_series.loc[<span class="st">'foo'</span>, deleted_series.index[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>], deleted_series.index[<span class="op">-</span><span class="dv">1</span>][<span class="dv">2</span>]] <span class="op">=</span> new_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now have a duplicate (at <em>level</em> 1, i.e., <code>id</code>)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>deleted_series.index.get_level_values(<span class="dv">2</span>).duplicated().<span class="bu">any</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p>A function to get rid of duplicates from a <em>deleted series</em>. The <strong>oldest</strong> entry is kept.</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/postprocess.py#L129" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="deduplicate_deleted_series" class="level3">
+<h3 class="anchored" data-anchor-id="deduplicate_deleted_series">deduplicate_deleted_series</h3>
+<blockquote class="blockquote">
+<pre><code> deduplicate_deleted_series (series:pandas.core.series.Series)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>deduplicated_series <span class="op">=</span> deduplicate_deleted_series(deleted_series)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>deduplicated_series.tail(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>zip                                      file name                                              id                                                                                 
+PlataformasAgregadasSinMenores_2018.zip  PlataformasAgregadasSinMenores_20180217_190110_1.atom  https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1996094   2018-02-07 09:01:16.378000+00:00
+foo                                      PlataformasAgregadasSinMenores_20180217_190110_1.atom  https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/2000163          2017-01-03 00:00:00+00:00
+Name: deleted_on, dtype: datetime64[ns, UTC]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="kw">not</span> deduplicated_series.index.get_level_values(<span class="dv">2</span>).duplicated().<span class="bu">any</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>deleted_series.shape, deduplicated_series.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>((52,), (51,))</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

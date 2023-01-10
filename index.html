@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Spanish procurement">
+
+<title>sproc</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="sproc">
+<meta property="og:description" content="Spanish procurement">
+<meta property="og:site-name" content="sproc">
+<meta name="twitter:title" content="sproc">
+<meta name="twitter:description" content="Spanish procurement">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">sproc</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">sproc</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">sproc</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link">core</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./structure.html" class="sidebar-item-text sidebar-link">structure</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./xml.html" class="sidebar-item-text sidebar-link">xml</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./postprocess.html" class="sidebar-item-text sidebar-link">postprocess</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bundle.html" class="sidebar-item-text sidebar-link">bundle</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hierarchical.html" class="sidebar-item-text sidebar-link">hier</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./io.html" class="sidebar-item-text sidebar-link">io</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./parse.html" class="sidebar-item-text sidebar-link">parse</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./assemble.html" class="sidebar-item-text sidebar-link">assemble</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extend.html" class="sidebar-item-text sidebar-link">extend</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./download.html" class="sidebar-item-text sidebar-link">download</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#install" id="toc-install" class="nav-link active" data-scroll-target="#install">Install</a></li>
+  <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How to use</a>
+  <ul class="collapse">
+  <li><a href="#scripts" id="toc-scripts" class="nav-link" data-scroll-target="#scripts">Scripts</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/manuvazquez/sproc/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">sproc</h1>
+</div>
+
+<div>
+  <div class="description">
+    Spanish procurement
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>This is Python code meant to download and <em>parse</em> Spanish government’s <a href="https://contrataciondelestado.es">Plataforma de contratación del sector público</a> <em>metadata</em>. It produces <a href="https://parquet.apache.org/">parquet</a> files that can be easily read in many programming languages.</p>
+<p>This project was developed with <a href="https://github.com/fastai/nbdev">nbdev</a>, and hence each module stems from a <a href="https://jupyter.org/">Jupyter</a> notebook that contains the code, along with tests and documentation. If you are interested in the inner workings of any module you can check its corresponding notebook in the corresponding section of the <a href="https://manuvazquez.github.io/sproc/">github pages</a> of the project.</p>
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<pre><code>pip install git+https://github.com/manuvazquez/sproc@main</code></pre>
+<p>should do.</p>
+</section>
+<section id="how-to-use" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use">How to use</h2>
+<p>The software can be exploited as a library or as <em>standalone</em> scripts.</p>
+<section id="scripts" class="level3">
+<h3 class="anchored" data-anchor-id="scripts">Scripts</h3>
+<section id="downloading-data" class="level4">
+<h4 class="anchored" data-anchor-id="downloading-data">Downloading data</h4>
+<p><code>sproc_update</code> command is the work-horse of the library. It allows downloading <em>all</em> the data of a given <code>kind</code> into a <em>parquet</em> file, that later on can be updated invoking the same command. Running, e.g.,</p>
+<pre><code>sproc_update outsiders</code></pre>
+<p>will download all the <em>aggregated</em> procurement data (excluding minor contracts), and write a <code>outsiders.parquet</code> file. Argument <code>-o</code> can be used to specify a directory other than the current one. Instead of <code>outsiders</code>, one can pass <code>insiders</code> or <code>minors</code>.</p>
+<p>This is the highest-level command, and most likely the only one you need. The remaining ones (briefly explained below) provide access to finer granularity functionality.</p>
+</section>
+<section id="processing-a-single-zip-file" class="level4">
+<h4 class="anchored" data-anchor-id="processing-a-single-zip-file">Processing a single zip file</h4>
+<p>For testing purposes one can download <em>Outsiders contracts for 2018</em>, either directly by clicking <a href="https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores_2018.zip">this link</a> or, if <a href="https://www.gnu.org/software/wget/">wget</a> is available, running</p>
+<pre><code>wget https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores_2018.zip</code></pre>
+<p>Running</p>
+<pre><code>sproc_process_zip.py PlataformasAgregadasSinMenores_2018.zip 2018.parquet</code></pre>
+<p>outputs the file <code>2018.parquet</code> (the name being given by the 2nd argument), which contains a <code>pd.DataFrame</code> with all the 2018 metadata. It can be readily loaded (in Python, through <a href="https://pandas.pydata.org/">Pandas</a>’ <code>pd.read_parquet</code>). The columns of the <code>pd.DataFrame</code> stored inside are <em>multiindexed</em> (meaning one could get columns such as <code>(ContractFolderStatus','ContractFolderID)</code> and <code>(ContractFolderStatus','ContractFolderStatusCode)</code>. This is very convenient when visualizing the data (see the <a href="https://manuvazquez.github.io/sproc/hierarchical.html#flat_df_to_multiindexed_df">the documentation for the <code>hier</code>module</a>).</p>
+</section>
+<section id="from-hierarchical-multiindexed-columns-to-plain-ones" class="level4">
+<h4 class="anchored" data-anchor-id="from-hierarchical-multiindexed-columns-to-plain-ones">From hierarchical (<em>multiindexed</em>) columns to plain ones</h4>
+<p>The columns of the above <code>pd.DataFrame</code> can be <em>flattened</em> to get, in the example above, <code>ContractFolderStatus - ContractFolderID</code> and <code>ContractFolderStatus - ContractFolderStatusCode</code>, respectively. Additionally, some renaming might be applied following the mapping in some YAML file</p>
+<pre><code>sproc_rename_cols.py 2018.parquet samples/PLACE.yaml 2018_flattened.parquet</code></pre>
+<p>This would yield a <code>pd.DataFrame</code> with <em>plain</em> columns in file <code>2018_flattened.parquet</code>. Renaming is carried out using the mapping in <a href="https://github.com/manuvazquez/sproc/blob/master/samples/PLACE.yaml">PLACE.yaml</a>, which can be found in the <code>samples</code> directory of this repository.</p>
+</section>
+<section id="processing-a-list-of-zip-files" class="level4">
+<h4 class="anchored" data-anchor-id="processing-a-list-of-zip-files">Processing a list of zip files</h4>
+<p>Command <code>sproc_read_zips.py</code> can be used to <em>batch</em>-process a sequence of files, e.g.,</p>
+<pre><code>sproc_read_zips.py contratosMenoresPerfilesContratantes_2018.zip contratosMenoresPerfilesContratantes_2019.zip</code></pre>
+<p>If no output file is specified (through the <code>-o</code> option), an <code>out.parquet</code> file (in which all the entries of all the zip files are stitched together) is produced.</p>
+</section>
+<section id="appending-new-data-to-an-existing-column-multiindexed-parquet-file" class="level4">
+<h4 class="anchored" data-anchor-id="appending-new-data-to-an-existing-column-multiindexed-parquet-file">Appending new data to an existing (column-<em>multiindexed</em>) <em>parquet</em> file</h4>
+<p>We can append new data to an existing <code>pd.DataFrame</code>. Let us, for instance, download, <a href="https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores_202201.zip">data from January 2022</a>,</p>
+<pre><code>wget https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores_202201.zip</code></pre>
+<p>and extend the previous <em>parquet</em> file with data extracted from the newly downloaded <em>zip</em>,</p>
+<pre><code>sproc_extend_parquet_with_zip.py 2018.parquet PlataformasAgregadasSinMenores_202201.zip 2018_202201.parquet</code></pre>
+<p>The <em>combined</em> data was saved in <code>2018_202201.parquet</code>.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

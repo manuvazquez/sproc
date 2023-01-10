@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Functionality to parse XML files">
+
+<title>sproc - xml</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="sproc - xml">
+<meta property="og:description" content="Functionality to parse XML files">
+<meta property="og:site-name" content="sproc">
+<meta name="twitter:title" content="sproc - xml">
+<meta name="twitter:description" content="Functionality to parse XML files">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">sproc</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">xml</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">sproc</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core.html" class="sidebar-item-text sidebar-link">core</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./structure.html" class="sidebar-item-text sidebar-link">structure</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./xml.html" class="sidebar-item-text sidebar-link active">xml</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./postprocess.html" class="sidebar-item-text sidebar-link">postprocess</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bundle.html" class="sidebar-item-text sidebar-link">bundle</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./hierarchical.html" class="sidebar-item-text sidebar-link">hier</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./io.html" class="sidebar-item-text sidebar-link">io</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./parse.html" class="sidebar-item-text sidebar-link">parse</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./assemble.html" class="sidebar-item-text sidebar-link">assemble</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./extend.html" class="sidebar-item-text sidebar-link">extend</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./download.html" class="sidebar-item-text sidebar-link">download</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sample-data" id="toc-sample-data" class="nav-link active" data-scroll-target="#sample-data">Sample data</a></li>
+  <li><a href="#convenience-functions" id="toc-convenience-functions" class="nav-link" data-scroll-target="#convenience-functions">Convenience functions</a>
+  <ul class="collapse">
+  <li><a href="#get_namespaces" id="toc-get_namespaces" class="nav-link" data-scroll-target="#get_namespaces">get_namespaces</a></li>
+  <li><a href="#split_namespace_tag" id="toc-split_namespace_tag" class="nav-link" data-scroll-target="#split_namespace_tag">split_namespace_tag</a></li>
+  <li><a href="#regular-entries" id="toc-regular-entries" class="nav-link" data-scroll-target="#regular-entries">Regular entries</a></li>
+  <li><a href="#get_entries" id="toc-get_entries" class="nav-link" data-scroll-target="#get_entries">get_entries</a></li>
+  <li><a href="#deleted-entries" id="toc-deleted-entries" class="nav-link" data-scroll-target="#deleted-entries">Deleted entries</a></li>
+  <li><a href="#get_deleted_entries" id="toc-get_deleted_entries" class="nav-link" data-scroll-target="#get_deleted_entries">get_deleted_entries</a></li>
+  <li><a href="#deleted_to_series" id="toc-deleted_to_series" class="nav-link" data-scroll-target="#deleted_to_series">deleted_to_series</a></li>
+  </ul></li>
+  <li><a href="#parsing" id="toc-parsing" class="nav-link" data-scroll-target="#parsing">Parsing</a>
+  <ul class="collapse">
+  <li><a href="#set_or_append" id="toc-set_or_append" class="nav-link" data-scroll-target="#set_or_append">set_or_append</a></li>
+  <li><a href="#entry_to_dict" id="toc-entry_to_dict" class="nav-link" data-scroll-target="#entry_to_dict">entry_to_dict</a></li>
+  </ul></li>
+  <li><a href="#data-structures" id="toc-data-structures" class="nav-link" data-scroll-target="#data-structures">Data structures</a>
+  <ul class="collapse">
+  <li><a href="#series" id="toc-series" class="nav-link" data-scroll-target="#series">Series</a></li>
+  <li><a href="#entry_to_series" id="toc-entry_to_series" class="nav-link" data-scroll-target="#entry_to_series">entry_to_series</a></li>
+  <li><a href="#dataframe" id="toc-dataframe" class="nav-link" data-scroll-target="#dataframe">DataFrame</a></li>
+  <li><a href="#to_df" id="toc-to_df" class="nav-link" data-scroll-target="#to_df">to_df</a></li>
+  <li><a href="#to_curated_df" id="toc-to_curated_df" class="nav-link" data-scroll-target="#to_curated_df">to_curated_df</a></li>
+  </ul></li>
+  <li><a href="#assorted" id="toc-assorted" class="nav-link" data-scroll-target="#assorted">Assorted</a>
+  <ul class="collapse">
+  <li><a href="#columns_depth" id="toc-columns_depth" class="nav-link" data-scroll-target="#columns_depth">columns_depth</a></li>
+  </ul></li>
+  <li><a href="#robustness" id="toc-robustness" class="nav-link" data-scroll-target="#robustness">Robustness</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/manuvazquez/sproc/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">xml</h1>
+</div>
+
+<div>
+  <div class="description">
+    Functionality to parse XML files
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="sample-data" class="level2">
+<h2 class="anchored" data-anchor-id="sample-data">Sample data</h2>
+<p>Directory where the data (<em>XML</em> files) are stored</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>directory <span class="op">=</span> pathlib.Path.cwd().parent <span class="op">/</span> <span class="st">'samples'</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> directory.exists()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>directory</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples')</code></pre>
+</div>
+</div>
+<p>A (sample) file in that directory</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>xml_file <span class="op">=</span> directory <span class="op">/</span> <span class="st">'PlataformasAgregadasSinMenores_20220104_030016_1.atom'</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> xml_file.exists()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>xml_file</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples/PlataformasAgregadasSinMenores_20220104_030016_1.atom')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>head {xml_file} <span class="op">--</span>lines<span class="op">=</span><span class="dv">20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:cbc-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonBasicComponents-2" xmlns:cac-place-ext="urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:dgpe:names:draft:codice:schema:xsd:CommonAggregateComponents-2" xmlns:ns1="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"&gt;
+    &lt;author&gt;
+        &lt;name&gt;Plataforma de Contratación del Sector Público&lt;/name&gt;
+        &lt;uri&gt;https://contrataciondelestado.es&lt;/uri&gt;
+        &lt;email&gt;contrataciondelestado@minhafp.es&lt;/email&gt;
+    &lt;/author&gt;
+    &lt;id&gt;https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom&lt;/id&gt;
+    &lt;link href="PlataformasAgregadasSinMenores_20220104_030016_1.atom" rel="self"/&gt;
+    &lt;link href="PlataformasAgregadasSinMenores.atom" rel="first"/&gt;
+    &lt;link href="PlataformasAgregadasSinMenores_20220104_030016.atom" rel="prev"/&gt;
+    &lt;link href="PlataformasAgregadasSinMenores_20211231_030012.atom" rel="next"/&gt;
+    &lt;title&gt;Licitaciones publicadas en la Plataforma de Contratación del Sector Público: Plataformas Agregadas Sin Menores&lt;/title&gt;
+    &lt;updated&gt;2022-01-03T03:00:13.633+01:00&lt;/updated&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968384" when="2022-01-03T00:11:41.879+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/6802801" when="2022-01-03T00:11:41.837+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8231582" when="2022-01-03T00:11:41.790+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968385" when="2022-01-03T00:11:41.750+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1969766" when="2022-01-03T00:11:41.698+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;
+    &lt;at:deleted-entry ref="https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968427" when="2022-01-03T00:11:41.653+01:00" xmlns:at="http://purl.org/atompub/tombstones/1.0"/&gt;</code></pre>
+</div>
+</div>
+<p><em>Root</em> element of the <em>XML</em> tree</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> etree.parse(xml_file).getroot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="convenience-functions" class="level2">
+<h2 class="anchored" data-anchor-id="convenience-functions">Convenience functions</h2>
+<p>A function to extract the <em>namespace</em>s declared in an <em>XML</em> file</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L21" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="get_namespaces" class="level3">
+<h3 class="anchored" data-anchor-id="get_namespaces">get_namespaces</h3>
+<blockquote class="blockquote">
+<pre><code> get_namespaces (input_file:str|pathlib.Path, root_name:str='base')</code></pre>
+</blockquote>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>input_file</td>
+<td>str | pathlib.Path</td>
+<td></td>
+<td>XML file</td>
+</tr>
+<tr class="even">
+<td>root_name</td>
+<td>str</td>
+<td>base</td>
+<td>Name of the root element</td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>dict</strong></td>
+<td></td>
+<td><strong>Mapping from <em>tag</em> to <em>namespace</em></strong></td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>get_namespaces(xml_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'cbc-place-ext': 'urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonBasicComponents-2',
+ 'cac-place-ext': 'urn:dgpe:names:draft:codice-place-ext:schema:xsd:CommonAggregateComponents-2',
+ 'cbc': 'urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2',
+ 'cac': 'urn:dgpe:names:draft:codice:schema:xsd:CommonAggregateComponents-2',
+ 'ns1': 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2',
+ 'base': 'http://www.w3.org/2005/Atom'}</code></pre>
+</div>
+</div>
+<p>In order to trim off <em>namespace</em>s from a tag: - a regular expression</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> re_tag.match(<span class="st">'</span><span class="sc">{blabla}</span><span class="st">foo'</span>).groups() <span class="op">==</span> (<span class="st">'blabla'</span>, <span class="st">'foo'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>re_tag.match(<span class="st">'</span><span class="sc">{some.namespace}</span><span class="st">id'</span>).groups()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('some.namespace', 'id')</code></pre>
+</div>
+</div>
+<ul>
+<li>a convenience function exploiting the latter</li>
+</ul>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L40" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="split_namespace_tag" class="level3">
+<h3 class="anchored" data-anchor-id="split_namespace_tag">split_namespace_tag</h3>
+<blockquote class="blockquote">
+<pre><code> split_namespace_tag (namespace_tag:str)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>split_namespace_tag(<span class="st">'</span><span class="sc">{some.namespace}</span><span class="st">id'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('some.namespace', 'id')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>split_namespace_tag(root.tag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('http://www.w3.org/2005/Atom', 'feed')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>root.tag</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'{http://www.w3.org/2005/Atom}feed'</code></pre>
+</div>
+</div>
+</section>
+<section id="regular-entries" class="level3">
+<h3 class="anchored" data-anchor-id="regular-entries">Regular entries</h3>
+<p>A function to get a list of <code>etree.Element</code> with all the <em>entries</em> (allegedly, <em>procurement contracts</em>)</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L45" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_entries" class="level3">
+<h3 class="anchored" data-anchor-id="get_entries">get_entries</h3>
+<blockquote class="blockquote">
+<pre><code> get_entries (root:&lt;cyfunctionElementat0x7fdc3817d220&gt;)</code></pre>
+</blockquote>
+<p><em>Entries</em> are extracted using the above function (only the 4 first ones are shown)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>entries <span class="op">=</span> get_entries(root)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">len</span>(entries) <span class="op">==</span> <span class="dv">117</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>entries[:<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[&lt;Element {http://www.w3.org/2005/Atom}entry&gt;,
+ &lt;Element {http://www.w3.org/2005/Atom}entry&gt;,
+ &lt;Element {http://www.w3.org/2005/Atom}entry&gt;,
+ &lt;Element {http://www.w3.org/2005/Atom}entry&gt;]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>element <span class="op">=</span> entries[<span class="dv">0</span>]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>split_namespace_tag(element.tag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('http://www.w3.org/2005/Atom', 'entry')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>subelement <span class="op">=</span> element[<span class="dv">3</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>split_namespace_tag(subelement.tag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('http://www.w3.org/2005/Atom', 'title')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>subelement.text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>"L'objecte del contracte és la renovació de totes les llumeneres que formen la il·luminació existent de tots els carrers i vials del casc urbà de la localitat de Sant Ramon i dels nuclis agregats de La Manresana, Portell, Viver i Gospí"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>element</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Element {http://www.w3.org/2005/Atom}entry&gt;</code></pre>
+</div>
+</div>
+<p>Everything is stored as a string in an <em>XML</em> file. The approach below is used to handle conversions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>numeric_field <span class="op">=</span> <span class="st">'8'</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>numeric_field.isnumeric()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">float</span>(numeric_field).is_integer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>True</code></pre>
+</div>
+</div>
+</section>
+<section id="deleted-entries" class="level3">
+<h3 class="anchored" data-anchor-id="deleted-entries">Deleted entries</h3>
+<p>It makes sense to treat separately since they information provided for them is completely different.</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L50" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_deleted_entries" class="level3">
+<h3 class="anchored" data-anchor-id="get_deleted_entries">get_deleted_entries</h3>
+<blockquote class="blockquote">
+<pre><code> get_deleted_entries (root:&lt;cyfunctionElementat0x7fdc3817d220&gt;)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>deleted_entries <span class="op">=</span> get_deleted_entries(root)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>deleted_entries[:<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>[&lt;Element {http://purl.org/atompub/tombstones/1.0}deleted-entry&gt;,
+ &lt;Element {http://purl.org/atompub/tombstones/1.0}deleted-entry&gt;]</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>deleted_element <span class="op">=</span> deleted_entries[<span class="dv">0</span>]</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>split_namespace_tag(deleted_element.tag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>('http://purl.org/atompub/tombstones/1.0', 'deleted-entry')</code></pre>
+</div>
+</div>
+<p>These are <em>all-attributes</em> elements</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>deleted_element.attrib</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'ref': 'https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968384', 'when': '2022-01-03T00:11:41.879+01:00'}</code></pre>
+</div>
+</div>
+<p>A function to process an XML file into a <code>pd.Series</code></p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L55" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="deleted_to_series" class="level3">
+<h3 class="anchored" data-anchor-id="deleted_to_series">deleted_to_series</h3>
+<blockquote class="blockquote">
+<pre><code> deleted_to_series (input_file:str|pathlib.Path)</code></pre>
+</blockquote>
+<p>Reads and parses “deleted” entries in an XML file.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>input_file: str or Path</p>
+<p>Input file.</p></li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><p>out: pd.Series</p>
+<p>A Pandas Series with XML data.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>deleted_series <span class="op">=</span> deleted_to_series(xml_file)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>deleted_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968384   2022-01-02 23:11:41.879000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/6802801   2022-01-02 23:11:41.837000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8231582   2022-01-02 23:11:41.790000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1968385   2022-01-02 23:11:41.750000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1969766   2022-01-02 23:11:41.698000+00:00
+                                                                                                    ...               
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1958181   2021-12-30 23:13:12.646000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1962159   2021-12-30 23:13:12.596000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1958329   2021-12-30 23:13:12.544000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1955955   2021-12-30 23:13:12.471000+00:00
+https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/1955775   2021-12-30 23:13:12.414000+00:00
+Name: deleted_on, Length: 383, dtype: datetime64[ns, UTC]</code></pre>
+</div>
+</div>
+<p>Are there duplicates?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(deleted_series) <span class="op">&gt;</span> <span class="bu">len</span>(deleted_series.unique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>False</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># offending_xml = directory / 'deleted_offending.atom'</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># offending_xml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># offending_deleted_series = deleted_to_series(offending_xml)</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># offending_deleted_series</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="parsing" class="level2">
+<h2 class="anchored" data-anchor-id="parsing">Parsing</h2>
+<p>A function to handle <em>multi-valued</em> fields</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L95" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="set_or_append" class="level3">
+<h3 class="anchored" data-anchor-id="set_or_append">set_or_append</h3>
+<blockquote class="blockquote">
+<pre><code> set_or_append (d:dict, key:str, value:str|dict)</code></pre>
+</blockquote>
+<p>A sample dictionary</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>sample_dict <span class="op">=</span> {}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A value for <em>foo</em> is added</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>set_or_append(sample_dict, <span class="st">'foo'</span>, <span class="dv">1</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>sample_dict</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'foo': 1}</code></pre>
+</div>
+</div>
+<p>Another value for the <em>same</em> key is added</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>set_or_append(sample_dict, <span class="st">'foo'</span>, <span class="dv">2</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sample_dict</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'foo': [1, 2]}</code></pre>
+</div>
+</div>
+<p>A different key is added</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>set_or_append(sample_dict, <span class="st">'blah'</span>, <span class="dv">3</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>sample_dict</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'foo': [1, 2], 'blah': 3}</code></pre>
+</div>
+</div>
+<p>A <strong>recursive</strong> function to parse a node of the <em>XML</em> tree</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L105" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="entry_to_dict" class="level3">
+<h3 class="anchored" data-anchor-id="entry_to_dict">entry_to_dict</h3>
+<blockquote class="blockquote">
+<pre><code> entry_to_dict (entry:&lt;cyfunctionElementat0x7fdc3817d220&gt;,
+                recursive:bool=True)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>element_series <span class="op">=</span> entry_to_dict(element)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>element_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>{'id': 'https://contrataciondelestado.es/sindicacion/PlataformasAgregadasSinMenores/8799346',
+ 'summary': 'Id licitación: C. 2-2021; Órgano de Contratación: Ajuntament de Sant Ramon; Importe: 135553.26; Estado: ADJUDICADA',
+ 'title': "L'objecte del contracte és la renovació de totes les llumeneres que formen la il·luminació existent de tots els carrers i vials del casc urbà de la localitat de Sant Ramon i dels nuclis agregats de La Manresana, Portell, Viver i Gospí",
+ 'updated': '2022-01-03T01:11:41.826+01:00',
+ 'ContractFolderStatus - ContractFolderID': 'C. 2-2021',
+ 'ContractFolderStatus - ContractFolderStatusCode': 'ADJ',
+ 'ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID': 'https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/cap.pscp?reqCode=viewDetail&amp;idCap=2763318',
+ 'ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name': 'Ajuntament de Sant Ramon',
+ 'ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name': 'Entitats municipals de Catalunya',
+ 'ContractFolderStatus - ProcurementProject - Name': "L'objecte del contracte és la renovació de totes les llumeneres que formen la il·luminació existent de tots els carrers i vials del casc urbà de la localitat de Sant Ramon i dels nuclis agregats de La Manresana, Portell, Viver i Gospí",
+ 'ContractFolderStatus - ProcurementProject - TypeCode': 1,
+ 'ContractFolderStatus - ProcurementProject - BudgetAmount - EstimatedOverallContractAmount': '135553.26',
+ 'ContractFolderStatus - ProcurementProject - BudgetAmount - TaxExclusiveAmount': '135553.26',
+ 'ContractFolderStatus - ProcurementProject - RequiredCommodityClassification - ItemClassificationCode': 34928530,
+ 'ContractFolderStatus - ProcurementProject - RealizedLocation - CountrySubentityCode': 'ES513',
+ 'ContractFolderStatus - ProcurementProject - PlannedPeriod - DurationMeasure': 3,
+ 'ContractFolderStatus - TenderResult - ResultCode': 8,
+ 'ContractFolderStatus - TenderResult - ReceivedTenderQuantity': 11,
+ 'ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID': 'A28526275',
+ 'ContractFolderStatus - TenderResult - WinningParty - PartyName - Name': 'AERONAVAL DE CONSTRUCCIONES I INSTALACIONES , SA ( ACISA)',
+ 'ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount': '90078.51',
+ 'ContractFolderStatus - TenderingProcess - ProcedureCode': 9,
+ 'ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate': '2021-12-17',
+ 'ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime': '14:00:00',
+ 'ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode': ['DOC_CN',
+  'DOC_CAN_ADJ'],
+ 'ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName': ['Perfil del contratante',
+  'Perfil del contratante'],
+ 'ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate': ['2021-11-30',
+  '2022-01-03']}</code></pre>
+</div>
+</div>
+<p>An example of <em>multi-valued</em> field</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>element_series[sproc.structure.assemble_name(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'ContractFolderStatus'</span>, <span class="st">'ValidNoticeInfo'</span>, <span class="st">'AdditionalPublicationStatus'</span>, <span class="st">'AdditionalPublicationDocumentReference'</span>, <span class="st">'IssueDate'</span>]</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>['2021-11-30', '2022-01-03']</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-structures" class="level2">
+<h2 class="anchored" data-anchor-id="data-structures">Data structures</h2>
+<section id="series" class="level3">
+<h3 class="anchored" data-anchor-id="series">Series</h3>
+<p>A function that just wraps the result of <a href="https://manuvazquez.github.io/sproc/xml.html#entry_to_dict"><code>entry_to_dict</code></a> into a <code>pd.Series</code></p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L159" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="entry_to_series" class="level3">
+<h3 class="anchored" data-anchor-id="entry_to_series">entry_to_series</h3>
+<blockquote class="blockquote">
+<pre><code> entry_to_series (entry:&lt;cyfunctionElementat0x7fdc3817d220&gt;)</code></pre>
+</blockquote>
+<p>Only the first 8 fields are printed (enough to show <em>nested</em> elements)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>element_series <span class="op">=</span> entry_to_series(element)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>element_series[:<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id                                                                           https://contrataciondelestado.es/sindicacion/P...
+summary                                                                      Id licitación: C. 2-2021; Órgano de Contrataci...
+title                                                                        L'objecte del contracte és la renovació de tot...
+updated                                                                                          2022-01-03T01:11:41.826+01:00
+ContractFolderStatus - ContractFolderID                                                                              C. 2-2021
+ContractFolderStatus - ContractFolderStatusCode                                                                            ADJ
+ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID           https://contractaciopublica.gencat.cat/ecofin_...
+ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name                             Ajuntament de Sant Ramon
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+<section id="dataframe" class="level3">
+<h3 class="anchored" data-anchor-id="dataframe">DataFrame</h3>
+<p>We can concatenate together the <code>pd.Series</code> for the different <em>entries</em> into a <code>pd.DataFrame</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([entry_to_series(e) <span class="cf">for</span> e <span class="kw">in</span> entries[:<span class="dv">4</span>]], axis<span class="op">=</span><span class="dv">1</span>).T</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TenderResult - WinningParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount</th>
+      <th>ContractFolderStatus - TenderingProcess - ProcedureCode</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate</th>
+      <th>ContractFolderStatus - LegalDocumentReference - ID</th>
+      <th>ContractFolderStatus - LegalDocumentReference - Attachment - ExternalReference - URI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03T01:11:41.826+01:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>AERONAVAL DE CONSTRUCCIONES I INSTALACIONES , ...</td>
+      <td>90078.51</td>
+      <td>9</td>
+      <td>2021-12-17</td>
+      <td>14:00:00</td>
+      <td>[DOC_CN, DOC_CAN_ADJ]</td>
+      <td>[Perfil del contratante, Perfil del contratante]</td>
+      <td>[2021-11-30, 2022-01-03]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8128_3/2021; Órgano de Contrata...</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>2022-01-03T01:00:11.194+01:00</td>
+      <td>8128_3/2021</td>
+      <td>PUB</td>
+      <td>NaN</td>
+      <td>Pleno del Ayuntamiento</td>
+      <td>AYUNTAMIENTO DE MONREAL</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>2022-01-22</td>
+      <td>23:30:00</td>
+      <td>DOC_CN</td>
+      <td>Perfil del contratante</td>
+      <td>2022-01-03</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1000_0005-CP01-2021-000063; Órg...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>2022-01-03T01:00:10.399+01:00</td>
+      <td>1000_0005-CP01-2021-000063</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>El Director General de Comunicación y Relacion...</td>
+      <td>Departamento de Presidencia, Igualdad, Función...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>DOC_CN</td>
+      <td>[DOUE, Perfil del contratante]</td>
+      <td>[2021-12-01, 2022-01-03]</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1379/2020 4738; Órgano de Contr...</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>2022-01-03T00:11:40.740+01:00</td>
+      <td>1379/2020 4738</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Canet de Mar</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>9</td>
+      <td>2022-01-02</td>
+      <td>23:59:00</td>
+      <td>DOC_CN</td>
+      <td>Perfil del contratante</td>
+      <td>2021-12-13</td>
+      <td>Plec Clausules.pdf</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+    </tr>
+  </tbody>
+</table>
+<p>4 rows × 29 columns</p>
+</div>
+</div>
+</div>
+<p>The types of the columns (every type is <code>object</code> since there are missing values everywhere)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>df.dtypes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id                                                                                                                           object
+summary                                                                                                                      object
+title                                                                                                                        object
+updated                                                                                                                      object
+ContractFolderStatus - ContractFolderID                                                                                      object
+ContractFolderStatus - ContractFolderStatusCode                                                                              object
+ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID                                                           object
+ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name                                                    object
+ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name                                       object
+ContractFolderStatus - ProcurementProject - Name                                                                             object
+ContractFolderStatus - ProcurementProject - TypeCode                                                                         object
+ContractFolderStatus - ProcurementProject - BudgetAmount - EstimatedOverallContractAmount                                    object
+ContractFolderStatus - ProcurementProject - BudgetAmount - TaxExclusiveAmount                                                object
+ContractFolderStatus - ProcurementProject - RequiredCommodityClassification - ItemClassificationCode                         object
+ContractFolderStatus - ProcurementProject - RealizedLocation - CountrySubentityCode                                          object
+ContractFolderStatus - ProcurementProject - PlannedPeriod - DurationMeasure                                                  object
+ContractFolderStatus - TenderResult - ResultCode                                                                             object
+ContractFolderStatus - TenderResult - ReceivedTenderQuantity                                                                 object
+ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID                                                object
+ContractFolderStatus - TenderResult - WinningParty - PartyName - Name                                                        object
+ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount                       object
+ContractFolderStatus - TenderingProcess - ProcedureCode                                                                      object
+ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate                                           object
+ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime                                           object
+ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode                                                                      object
+ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName                                  object
+ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate    object
+ContractFolderStatus - LegalDocumentReference - ID                                                                           object
+ContractFolderStatus - LegalDocumentReference - Attachment - ExternalReference - URI                                         object
+dtype: object</code></pre>
+</div>
+</div>
+<p>The function below follows the above strategy to turn an <em>XML</em> file into a <em>Pandas</em> <code>pd.DataFrame</code></p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L164" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="to_df" class="level3">
+<h3 class="anchored" data-anchor-id="to_df">to_df</h3>
+<blockquote class="blockquote">
+<pre><code> to_df (input_file:str|pathlib.Path)</code></pre>
+</blockquote>
+<p>Reads and parses an XML file into a <code>pd.DataFrame</code>.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>input_file: str or Path</p>
+<p>Input file.</p></li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><p>out: pd.DataFrame</p>
+<p>A Pandas DataFrame with XML data.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> to_df(xml_file)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - LegalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03T01:11:41.826+01:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8128_3/2021; Órgano de Contrata...</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>2022-01-03T01:00:11.194+01:00</td>
+      <td>8128_3/2021</td>
+      <td>PUB</td>
+      <td>NaN</td>
+      <td>Pleno del Ayuntamiento</td>
+      <td>AYUNTAMIENTO DE MONREAL</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1000_0005-CP01-2021-000063; Órg...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>2022-01-03T01:00:10.399+01:00</td>
+      <td>1000_0005-CP01-2021-000063</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>El Director General de Comunicación y Relacion...</td>
+      <td>Departamento de Presidencia, Igualdad, Función...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1379/2020 4738; Órgano de Contr...</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>2022-01-03T00:11:40.740+01:00</td>
+      <td>1379/2020 4738</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Canet de Mar</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>...</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 2021-44; Órgano de Contratación...</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>2022-01-03T00:11:40.696+01:00</td>
+      <td>2021-44</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Valls</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>...</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Enllac plec clausules tecniques.doc</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1005_391-2021; Órgano de Contra...</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>2021-12-31T01:00:14.946+01:00</td>
+      <td>1005_391-2021</td>
+      <td>PUB</td>
+      <td>NaN</td>
+      <td>Dirección General de Cultura-Institución Prínc...</td>
+      <td>Departamento de Cultura, Deporte y Juventud</td>
+      <td>Apoyo a la gestión del patrimonio filmográfico...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>113</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8165_3/2021; Órgano de Contrata...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>2021-12-31T01:00:14.393+01:00</td>
+      <td>8165_3/2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Mancomunidad de Servicios Sociales de Base de ...</td>
+      <td>MANCOMUNIDAD DE SERVICIOS DE HUARTE Y DE ESTER...</td>
+      <td>Asistencia técnica para la prestación del serv...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_3/2021; Órgano de Contrata...</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>2021-12-31T01:00:13.594+01:00</td>
+      <td>8113_3/2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Subdirector de Gestión y Recursos</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato de servicios de desinfección, desinse...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2022-01-01</td>
+      <td>2022-12-31</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8113_01 2021; Órgano de Contrat...</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>2021-12-31T01:00:12.604+01:00</td>
+      <td>8113_01 2021</td>
+      <td>EV</td>
+      <td>NaN</td>
+      <td>Agencia Navarra de Autonomía y Desarrollo de l...</td>
+      <td>Agencia Navarra para la Dependencia</td>
+      <td>Contrato del Servicio de Teleasistencia para l...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 0001264/2021; Órgano de contrat...</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>2021-12-31T00:14:15.739+01:00</td>
+      <td>0001264/2021</td>
+      <td>RES</td>
+      <td>NaN</td>
+      <td>Agencia Pública Empresarial Sanitaria Bajo Gua...</td>
+      <td>Junta de Andalucía</td>
+      <td>2021/pa-44-4 servicio de mantenimiento integra...</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>117 rows × 38 columns</p>
+</div>
+</div>
+</div>
+<p>A convenience function combining <a href="https://manuvazquez.github.io/sproc/xml.html#to_df"><code>to_df</code></a> and <code>post_process</code></p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L189" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="to_curated_df" class="level3">
+<h3 class="anchored" data-anchor-id="to_curated_df">to_curated_df</h3>
+<blockquote class="blockquote">
+<pre><code> to_curated_df (input_file:str|pathlib.Path)</code></pre>
+</blockquote>
+<p>Reads, parses and tidies up an XML file into a <code>pd.DataFrame</code>.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><p>input_file: str or Path</p>
+<p>Input file.</p></li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><p>out: pd.DataFrame</p>
+<p>A Pandas DataFrame with XML data.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>tidy_df <span class="op">=</span> to_curated_df(xml_file)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>tidy_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - ID</th>
+      <th>ContractFolderStatus - TechnicalDocumentReference - Attachment - ExternalReference - URI</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - StartDate</th>
+      <th>ContractFolderStatus - ProcurementProject - PlannedPeriod - EndDate</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - ParticipationRequestReceptionPeriod - EndTime</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - ProcurementProjectLotID</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03 00:11:41.826000+00:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2021-12-17 14:00:00+00:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 8128_3/2021; Órgano de Contrata...</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>2022-01-03 00:00:11.194000+00:00</td>
+      <td>8128_3/2021</td>
+      <td>PUB</td>
+      <td>&lt;NA&gt;</td>
+      <td>Pleno del Ayuntamiento</td>
+      <td>AYUNTAMIENTO DE MONREAL</td>
+      <td>Obras de restauración hidromorfológica del río...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-22 23:30:00+00:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1000_0005-CP01-2021-000063; Órg...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>2022-01-03 00:00:10.399000+00:00</td>
+      <td>1000_0005-CP01-2021-000063</td>
+      <td>EV</td>
+      <td>&lt;NA&gt;</td>
+      <td>El Director General de Comunicación y Relacion...</td>
+      <td>Departamento de Presidencia, Igualdad, Función...</td>
+      <td>Contrato del servicio de realización de labore...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>NaT</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 1379/2020 4738; Órgano de Contr...</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>2022-01-02 23:11:40.740000+00:00</td>
+      <td>1379/2020 4738</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Canet de Mar</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Obres de renovació de l'enllumenat públic a la...</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-02 23:59:00+00:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: 2021-44; Órgano de Contratación...</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>2022-01-02 23:11:40.696000+00:00</td>
+      <td>2021-44</td>
+      <td>EV</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Valls</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>Subministre i la instal·lació fotovoltaica en ...</td>
+      <td>...</td>
+      <td>Enllac plec clausules tecniques.doc</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>NaN</td>
+      <td>2022-01-02 23:59:00+00:00</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 39 columns</p>
+</div>
+</div>
+</div>
+<p>Some (post-)processing took place</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>tidy_df.dtypes[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>id                                                      string
+summary                                                 string
+title                                                   string
+updated                                    datetime64[ns, UTC]
+ContractFolderStatus - ContractFolderID                 string
+dtype: object</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="assorted" class="level2">
+<h2 class="anchored" data-anchor-id="assorted">Assorted</h2>
+<p>A function to find the depth (inside the <em>XML</em>) of every column. Columns associated with <em>leafs</em> (0 depth) are not reported.</p>
+<hr>
+<p><a href="https://github.com/manuvazquez/sproc/blob/main/sproc/xml.py#L210" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="columns_depth" class="level3">
+<h3 class="anchored" data-anchor-id="columns_depth">columns_depth</h3>
+<blockquote class="blockquote">
+<pre><code> columns_depth (df:pandas.core.frame.DataFrame)</code></pre>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>tidy_df_columns_depth <span class="op">=</span> columns_depth(tidy_df)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>tidy_df_columns_depth.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>column
+4    1
+5    1
+6    2
+7    4
+8    4
+Name: 0, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="robustness" class="level2">
+<h2 class="anchored" data-anchor-id="robustness">Robustness</h2>
+<p>A (sample) file in that directory</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>xml_file_single <span class="op">=</span> directory <span class="op">/</span> <span class="st">'PlataformasAgregadasSinMenores_20220104_030016_1_single.atom'</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> xml_file_single.exists()</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>xml_file_single</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>PosixPath('/home/manu/Sync/UC3M/proyectos/2022/nextProcurement/sproc/samples/PlataformasAgregadasSinMenores_20220104_030016_1_single.atom')</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>to_df(xml_file_single)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>summary</th>
+      <th>title</th>
+      <th>updated</th>
+      <th>ContractFolderStatus - ContractFolderID</th>
+      <th>ContractFolderStatus - ContractFolderStatusCode</th>
+      <th>ContractFolderStatus - LocatedContractingParty - BuyerProfileURIID</th>
+      <th>ContractFolderStatus - LocatedContractingParty - Party - PartyName - Name</th>
+      <th>ContractFolderStatus - LocatedContractingParty - ParentLocatedParty - PartyName - Name</th>
+      <th>ContractFolderStatus - ProcurementProject - Name</th>
+      <th>...</th>
+      <th>ContractFolderStatus - TenderResult - ReceivedTenderQuantity</th>
+      <th>ContractFolderStatus - TenderResult - WinningParty - PartyIdentification - ID</th>
+      <th>ContractFolderStatus - TenderResult - WinningParty - PartyName - Name</th>
+      <th>ContractFolderStatus - TenderResult - AwardedTenderedProject - LegalMonetaryTotal - TaxExclusiveAmount</th>
+      <th>ContractFolderStatus - TenderingProcess - ProcedureCode</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndDate</th>
+      <th>ContractFolderStatus - TenderingProcess - TenderSubmissionDeadlinePeriod - EndTime</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - NoticeTypeCode</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - PublicationMediaName</th>
+      <th>ContractFolderStatus - ValidNoticeInfo - AdditionalPublicationStatus - AdditionalPublicationDocumentReference - IssueDate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://contrataciondelestado.es/sindicacion/P...</td>
+      <td>Id licitación: C. 2-2021; Órgano de Contrataci...</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>2022-01-03T01:11:41.826+01:00</td>
+      <td>C. 2-2021</td>
+      <td>ADJ</td>
+      <td>https://contractaciopublica.gencat.cat/ecofin_...</td>
+      <td>Ajuntament de Sant Ramon</td>
+      <td>Entitats municipals de Catalunya</td>
+      <td>L'objecte del contracte és la renovació de tot...</td>
+      <td>...</td>
+      <td>11</td>
+      <td>[A28526275, A28526275 II]</td>
+      <td>[AERONAVAL DE CONSTRUCCIONES I INSTALACIONES ,...</td>
+      <td>90078.51</td>
+      <td>9</td>
+      <td>2021-12-17</td>
+      <td>14:00:00</td>
+      <td>[DOC_CN, DOC_CAN_ADJ]</td>
+      <td>[Perfil del contratante, Perfil del contratante]</td>
+      <td>[2021-11-30, 2022-01-03]</td>
+    </tr>
+  </tbody>
+</table>
+<p>1 rows × 27 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> etree.parse(xml_file_single)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> tree.getroot()</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>entries <span class="op">=</span> get_entries(root)</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>entries</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>entry_to_dict(entries[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
